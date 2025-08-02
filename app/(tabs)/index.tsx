@@ -13,6 +13,11 @@ export default function Page() {
         'Dips', 'Crunches', 'Russian Twists', 'Mountain Climbers'
     ];
 
+    const deleteExercise = (index: number) => {
+        const updatedExercises = selectedExercises.filter((_, i) => i !== index);
+        setSelectedExercises(updatedExercises);
+    };
+
     const filteredExercises = exercises.filter(exercise =>
         exercise.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -31,10 +36,14 @@ export default function Page() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>Log your workout</Text>
+            </View>
             <View style={styles.searchContainer}>
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search exercises..."
+                    placeholderTextColor="#000"
                     value={searchQuery}
                     onFocus={() => setShowDropdown(true)}
                     onChangeText={setSearchQuery}
@@ -58,9 +67,9 @@ export default function Page() {
 
             <ScrollView style={styles.tableContainer}>
                 <View style={[styles.tableRow, styles.headerRow]}>
-                    <Text style={[styles.exerciseName, styles.headerText]}>Exercise</Text>
-                    <Text style={[styles.exerciseName, styles.headerText]}>Sets</Text>
-                    <Text style={[styles.exerciseName, styles.headerText]}>Reps</Text>
+                    <Text style={[styles.headerExercise, styles.headerText]}>Exercise</Text>
+                    <Text style={[styles.headerText, styles.headerText]}>Sets</Text>
+                    <Text style={[styles.headerText, styles.headerText]}>Reps</Text>
                 </View>
 
                 {selectedExercises.map((exercise, index) => (
@@ -80,6 +89,12 @@ export default function Page() {
                             onChangeText={(value) => updateExercise(index, 'reps', value)}
                             keyboardType="numeric"
                         />
+                        <TouchableOpacity
+                            style={styles.deleteButton}
+                            onPress={() => deleteExercise(index)}
+                        >
+                            <Text style={styles.deleteButtonText}>×</Text>
+                        </TouchableOpacity>
                     </View>
                 ))}
             </ScrollView>
@@ -97,7 +112,7 @@ const styles = StyleSheet.create({
     searchContainer: {
         zIndex: 1,
         marginBottom: 16,
-        marginTop: 20,
+        marginTop: 5,
     },
     searchInput: {
         borderWidth: 1,
@@ -135,6 +150,7 @@ const styles = StyleSheet.create({
     exerciseName: {
         flex: 2,
         fontSize: 16,
+        paddingHorizontal: 4,
     },
     input: {
         flex: 1,
@@ -143,18 +159,52 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 8,
         marginHorizontal: 4,
+        height: 40,
     },
     headerRow: {
         backgroundColor: '#f5f5f5',
         borderBottomWidth: 2,
         borderBottomColor: '#ddd',
         marginBottom: 8,
+        paddingRight: 38,
     },
     headerText: {
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#333',
         fontSize: 16,
+        flex: 1,
     },
-
+    deleteButton: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: '#ff4444',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 8,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    headerExercise: {
+        fontWeight: 'bold',
+        color: '#333',
+        fontSize: 16,
+        flex: 2,
+        textAlign: 'left',
+        paddingHorizontal: 4,
+    },
+    titleContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000000',
+    },
 });
